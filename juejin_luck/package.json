@@ -1,0 +1,20 @@
+{
+  "name": "juejin_luck",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "^1.6.0",
+    "element-plus": "^1.1.0-beta.8",
+    "vue": "^3.0.4"
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "^3.0.4",
+    "less": "^4.1.1",
+    "less-loader": "^10.0.1",
+    "vite": "^1.0.0-rc.13",
+    "vite-plugin-element-plus": "0.0.12"
+  }
+}
