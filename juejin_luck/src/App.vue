@@ -1,15 +1,15 @@
 <template>
   <div>
-    <Luck></Luck>
+    <Home></Home>
   </div>
 </template>
 
 <script>
-import Luck from "./components/Luck/Luck.vue";
+import Home from "./components/Home/Home.vue";
 export default {
   name: "App",
   components: {
-    Luck,
+    Home,
   },
 };
 </script>

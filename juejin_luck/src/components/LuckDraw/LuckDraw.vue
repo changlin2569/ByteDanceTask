@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="right_box">
-        <Prizes :list="wonPrizes">
+        <Prizes :list="wonPrizes"></Prizes>
       </div>
     </div>
   </div>
@@ -29,7 +29,7 @@
 <script>
 import { reactive, ref } from "vue";
 import Lotterypanel from "./../Lotterypanel/Lotterypanel.vue";
-import Prizes from './../prizes/Prizes.vue'
+import Prizes from "./../Prizes/Prizes.vue";
 export default {
   setup() {
     const money = ref(400);
@@ -48,26 +48,26 @@ export default {
     };
 
     // 抽中的奖品
-    const wonPrizes = reactive([])
+    const wonPrizes = reactive([]);
     const getPrizeHandle = function (prize) {
-      const [date,] = new Date().toLocaleString().split(' ')
+      const [date] = new Date().toLocaleString().split(" ");
       wonPrizes.push({
         ...prize,
-        date
+        date,
       });
-    }
+    };
     return {
       money,
       isSign,
       signHandle,
       updateMoney,
       wonPrizes,
-      getPrizeHandle
+      getPrizeHandle,
     };
   },
   components: {
     Lotterypanel,
-    Prizes
+    Prizes,
   },
 };
 </script>

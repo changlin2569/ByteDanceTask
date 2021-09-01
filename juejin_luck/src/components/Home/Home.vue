@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import LuckDraw from "./../LuckDraw/LuckDraw.vue";
+import LuckDraw from "../LuckDraw/LuckDraw.vue";
 export default {
   setup() {
     return {};
