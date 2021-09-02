@@ -18,6 +18,11 @@ module.exports = appInfo => {
   // add your middleware config here
   config.middleware = [];
 
+  config.cors = {
+    origin: '*', // 匹配规则  域名+端口  *则为全匹配
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+  };
+
   config.security = {
     csrf: {
       enable: false,
