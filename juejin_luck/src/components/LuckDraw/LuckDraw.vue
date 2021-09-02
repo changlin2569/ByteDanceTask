@@ -30,9 +30,11 @@
 import { reactive, ref } from "vue";
 import Lotterypanel from "./../Lotterypanel/Lotterypanel.vue";
 import Prizes from "./../Prizes/Prizes.vue";
+import useMoney from "./../../hooks/useMoney";
+
 export default {
   setup() {
-    const money = ref(400);
+    const { money } = useMoney();
     const isSign = ref(false);
     // 签到
     const signHandle = function () {
@@ -56,6 +58,7 @@ export default {
         date,
       });
     };
+
     return {
       money,
       isSign,

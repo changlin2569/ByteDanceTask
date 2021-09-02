@@ -43,9 +43,11 @@
 
 <script>
 import { ref, toRefs } from "vue";
-import { prizeList } from "../../utils/prizeList";
+// import { prizeList } from "../../utils/prizeList";
 // import Toast from "./../common/Toast/Toast.vue";
 import { ElDialog, ElButton, ElMessage } from "element-plus";
+import usePrizeList from "./../../hooks/usePrizeList";
+
 export default {
   props: {
     money: {
@@ -58,6 +60,7 @@ export default {
     const { money: curMoney } = toRefs(props);
     const ownPrizeName = ref(""); // 获得奖品的名字
     const prizeDialogVisible = ref(false);
+    const { prizeList } = usePrizeList();
 
     // 抽中的奖品
     const getPrize = function (id) {
