@@ -1,22 +1,34 @@
 'use strict';
 
 const Service = require('egg').Service;
-const prize = require('./../utile/prize');
+// const prize = require('./../utile/prize');
 
 class PrizeService extends Service {
     async getPrizeList() {
-        const result = prize.getPrizeList();
-        return result;
+        const { app } = this;
+        const QUERY_STR = 'id, name';
+        const sql = `select ${QUERY_STR} from prizelist`;
+        try {
+            const result = await app.mysql.query(sql);
+            return result;
+        } catch (err) {
+            console.log(err);
+            return null;
+        }
     }
 
     async editPrizeList(name, options) {
-        const result = prize.editPrizeList(name, options);
-        return result;
-    }
+        const { app } = this;
 
-    async editPrice(price) {
-        const result = prize.editPrice(price);
-        return result;
+        try {
+            const result = await app.mysql.update('prizelist', options, {
+                where: { name },
+            });
+            return result;
+        } catch (err) {
+            console.log(err);
+            return null;
+        }
     }
 }
 

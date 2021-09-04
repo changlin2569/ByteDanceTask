@@ -75,35 +75,6 @@ class PrizeController extends Controller {
         };
     }
 
-    // 修改单价
-    async editPrice() {
-        const { ctx } = this;
-
-        const { price } = ctx.request.body;
-
-        if (!price) {
-            ctx.body = {
-                status: 414,
-                msg: '单价不能为0哦',
-            };
-        }
-
-        try {
-            await ctx.service.prize.editPrice(price);
-
-            ctx.body = {
-                status: 200,
-                msg: '修改成功',
-            };
-        } catch (err) {
-            console.log(err);
-
-            ctx.body = {
-                status: 500,
-                msg: 'Server error',
-            };
-        }
-    }
 }
 
 module.exports = PrizeController;
