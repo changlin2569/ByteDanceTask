@@ -3,17 +3,21 @@
     <div class="item-box">
       <div
         :class="{
-          item,
-          btn: item.id === 8 || count === item.id,
+          item: true,
+          selected: prizeList[item].id === 8 || count === prizeList[item].id,
         }"
-        v-for="item in prizeList"
-        :key="item.id"
+        v-for="item in order"
+        :key="item"
       >
-        <div class="img" v-if="item.id !== 8">
-          <img :src="item.img" alt="" />
+        <div class="img" v-if="prizeList[item].id !== 8">
+          <img :src="prizeList[item].img" alt="" />
         </div>
         <div class="text" @click="luckDrawHandle" v-else>抽奖</div>
-        <span>{{ item.price ? `${item.price}/次` : item.name }}</span>
+        <span>{{
+          prizeList[item].price
+            ? `${prizeList[item].price}/次`
+            : prizeList[item].name
+        }}</span>
       </div>
     </div>
     <!-- <Toast></Toast> -->
@@ -54,13 +58,17 @@ export default {
       type: Number,
       required: true,
     },
+    price: {
+      type: Number,
+      required: true,
+    },
   },
   setup(props, { emit }) {
     const count = ref(-1);
-    const { money: curMoney } = toRefs(props);
+    const { money: curMoney, price } = toRefs(props);
     const ownPrizeName = ref(""); // 获得奖品的名字
     const prizeDialogVisible = ref(false);
-    const { prizeList } = usePrizeList();
+    const { prizeList, order } = usePrizeList(price);
 
     // 抽中的奖品
     const getPrize = function (id) {
@@ -76,6 +84,7 @@ export default {
       prizeDialogVisible.value = !prizeDialogVisible.value;
     };
     // 触发抽奖
+    const timer = ref(null);
     const luckDrawHandle = function () {
       if (curMoney.value < 200) {
         ElMessage({
@@ -84,20 +93,21 @@ export default {
           type: "error",
         });
         return;
+      } else if (timer.value) {
+        return;
       }
       emit("updateMoney");
       const random = Math.random() * 100;
       let i = 1;
-      let timer;
       function _handle() {
-        timer = setTimeout(() => {
+        timer.value = setTimeout(() => {
           count.value += 1;
           if (count.value > 8) {
             count.value = 0;
           }
           i++;
           if (i > 25 && prizeList[count.value].probability >= random) {
-            clearTimeout(timer);
+            clearTimeout(timer.value);
             winPrize(count.value);
           } else {
             _handle();
@@ -112,6 +122,7 @@ export default {
       luckDrawHandle,
       prizeDialogVisible,
       ownPrizeName,
+      order,
     };
   },
   components: {
@@ -172,6 +183,12 @@ export default {
     }
 
     .btn {
+      background-color: #ffe5a4;
+      box-shadow: inset 0 0 16px #ffa800;
+      cursor: pointer;
+    }
+
+    .selected {
       background-color: #ffe5a4;
       box-shadow: inset 0 0 16px #ffa800;
       cursor: pointer;

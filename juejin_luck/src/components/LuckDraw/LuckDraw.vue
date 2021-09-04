@@ -5,7 +5,7 @@
       <div class="left_box">
         <div class="left_header">
           <div class="count">
-            当前矿石数：<span>{{ money }}</span>
+            当前矿石数：<span>{{ originMoney }}</span>
           </div>
           <div :class="{ sign: true, signed: isSign }" @click="signHandle">
             {{ isSign ? "已签到" : "签到" }}
@@ -13,7 +13,8 @@
         </div>
         <div class="panel">
           <Lotterypanel
-            :money="money"
+            :money="originMoney"
+            :price="price"
             @updateMoney="updateMoney"
             @getPrizeHandle="getPrizeHandle"
           ></Lotterypanel>
@@ -34,19 +35,19 @@ import useMoney from "./../../hooks/useMoney";
 
 export default {
   setup() {
-    const { money } = useMoney();
+    const { originMoney, price } = useMoney();
     const isSign = ref(false);
     // 签到
     const signHandle = function () {
       if (isSign.value) {
         return;
       }
-      money.value += 200;
+      originMoney.value += 200;
       isSign.value = true;
     };
 
     const updateMoney = function () {
-      money.value -= 200;
+      originMoney.value -= price.value;
     };
 
     // 抽中的奖品
@@ -60,7 +61,8 @@ export default {
     };
 
     return {
-      money,
+      originMoney,
+      price,
       isSign,
       signHandle,
       updateMoney,
