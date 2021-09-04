@@ -6,7 +6,7 @@ const Service = require('egg').Service;
 class PrizeService extends Service {
     async getPrizeList() {
         const { app } = this;
-        const QUERY_STR = 'id, name';
+        const QUERY_STR = 'id, name, img, probability';
         const sql = `select ${QUERY_STR} from prizelist`;
         try {
             const result = await app.mysql.query(sql);
