@@ -18,13 +18,13 @@ class MoneyService extends Service {
         }
     }
 
-    async editPrice(oldprice, price) {
+    async editPrice(oldPrice, price) {
         const { app } = this;
 
         try {
             const result = await app.mysql.update('money', { price }, {
                 where: {
-                    price: oldprice,
+                    price: oldPrice,
                 },
             });
             return result;

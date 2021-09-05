@@ -28,7 +28,8 @@ class MoneyController extends Controller {
     async editPrice() {
         const { ctx } = this;
 
-        const { oldprice, price } = ctx.request.body;
+        const { oldPrice, price } = ctx.request.body;
+        console.log(ctx.request.body);
 
         if (!price) {
             ctx.body = {
@@ -38,8 +39,7 @@ class MoneyController extends Controller {
         }
 
         try {
-            await ctx.service.money.editPrice(oldprice, price);
-
+            await ctx.service.money.editPrice(oldPrice, price);
             ctx.body = {
                 status: 200,
                 msg: '修改成功',

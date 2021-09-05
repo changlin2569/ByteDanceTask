@@ -1,7 +1,12 @@
-import Home from "./catainer/Home";
+import Home from "./container/Home";
+import { BrowserRouter } from "react-router-dom";
 
 function App() {
-  return <Home></Home>;
+  return (
+    <BrowserRouter>
+      <Home></Home>
+    </BrowserRouter>
+  );
 }
 
 export default App;
