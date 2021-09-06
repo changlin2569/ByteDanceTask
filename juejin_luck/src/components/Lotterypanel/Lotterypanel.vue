@@ -108,6 +108,7 @@ export default {
           i++;
           if (i > 25 && prizeList[count.value].probability >= random) {
             clearTimeout(timer.value);
+            timer.value = null;
             winPrize(count.value);
           } else {
             _handle();
