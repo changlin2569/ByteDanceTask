@@ -8,7 +8,6 @@ export default function () {
     proxy.$http({
         url: 'http://127.0.0.1:7001/money/getMoney'
     }).then(({ data: [money] }) => {
-        console.log(money);
         originMoney.value = money.originmoney;
         price.value = money.price;
     })

@@ -4,19 +4,19 @@
       <div
         :class="{
           item: true,
-          selected: prizeList[item].id === 8 || count === prizeList[item].id,
+          selected: item === 8 || count === item,
         }"
         v-for="item in order"
         :key="item"
       >
-        <div class="img" v-if="prizeList[item].id !== 8">
-          <img :src="prizeList[item].img" alt="" />
+        <div class="img" v-if="item !== 8">
+          <img :src="prizeList[item]?.img" alt="" />
         </div>
         <div class="text" @click="luckDrawHandle" v-else>抽奖</div>
         <span>{{
-          prizeList[item].price
+          prizeList[item]?.price
             ? `${prizeList[item].price}/次`
-            : prizeList[item].name
+            : prizeList[item]?.name
         }}</span>
       </div>
     </div>
@@ -46,11 +46,12 @@
 </template>
 
 <script>
-import { ref, toRefs } from "vue";
+import { ref, toRefs, reactive, onMounted } from "vue";
 // import { prizeList } from "../../utils/prizeList";
 // import Toast from "./../common/Toast/Toast.vue";
 import { ElDialog, ElButton, ElMessage } from "element-plus";
-import usePrizeList from "./../../hooks/usePrizeList";
+// import usePrizeList from "./../../hooks/usePrizeList";
+const order = [0, 1, 2, 7, 8, 3, 6, 5, 4];
 
 export default {
   props: {
@@ -64,28 +65,38 @@ export default {
     },
   },
   setup(props, { emit }) {
-    const count = ref(-1);
     const { money: curMoney, price } = toRefs(props);
-    const ownPrizeName = ref(""); // 获得奖品的名字
     const prizeDialogVisible = ref(false);
-    const { prizeList, order } = usePrizeList(price);
+    const prizeList = reactive([]);
+    // 获取礼物列表
+    const getPrizeList = async function () {
+      const respose = await fetch("http://127.0.0.1:7001/prizeList");
+      const { data } = await respose.json();
+      prizeList.push(...data, {
+        id: 8,
+        price,
+      });
+    };
 
     // 抽中的奖品
-    const getPrize = function (id) {
-      const [prize] = prizeList.filter((item) => item.id == id);
-      return prize;
+    const getResult = async function () {
+      const response = await fetch("http://127.0.0.1:7001/getLuckResult");
+      const { data } = await response.json();
+      return data;
     };
 
     // 中奖后
+    const ownPrizeName = ref(""); // 获得奖品的名字
     const winPrize = function (val) {
-      const ownPrize = getPrize(val);
-      emit("getPrizeHandle", ownPrize);
-      ownPrizeName.value = ownPrize.name;
+      emit("getPrizeHandle", val);
+      ownPrizeName.value = val.name;
       prizeDialogVisible.value = !prizeDialogVisible.value;
     };
+
     // 触发抽奖
+    const count = ref(-1);
     const timer = ref(null);
-    const luckDrawHandle = function () {
+    const luckDrawHandle = async function () {
       if (curMoney.value < 200) {
         ElMessage({
           showClose: true,
@@ -97,19 +108,19 @@ export default {
         return;
       }
       emit("updateMoney");
-      const random = Math.random() * 100;
+      const result = await getResult();
       let i = 1;
       function _handle() {
         timer.value = setTimeout(() => {
-          count.value += 1;
-          if (count.value > 8) {
-            count.value = 0;
+          if (count.value === 7) {
+            count.value = -1;
           }
+          count.value += 1;
           i++;
-          if (i > 25 && prizeList[count.value].probability >= random) {
+          if (i > 25) {
             clearTimeout(timer.value);
             timer.value = null;
-            winPrize(count.value);
+            winPrize(result);
           } else {
             _handle();
           }
@@ -117,6 +128,10 @@ export default {
       }
       _handle();
     };
+
+    onMounted(() => {
+      getPrizeList();
+    });
     return {
       count,
       prizeList,
@@ -155,6 +170,7 @@ export default {
 
     .item {
       display: flex;
+      grid-area: five;
       flex-direction: column;
       justify-content: center;
       align-items: center;

@@ -1,7 +1,7 @@
 'use strict';
 
 const Controller = require('egg').Controller;
-
+const result = require('./../utile/result');
 class PrizeController extends Controller {
     // 获取奖池
     async getPrizeList() {
@@ -65,14 +65,38 @@ class PrizeController extends Controller {
     }
 
     // 获得抽奖结果
+    // async getLuckResult() {
+    //     const { ctx } = this;
+
+    //     const random = Math.random() * 100;
+    //     ctx.body = {
+    //         status: 200,
+    //         data: random,
+    //     };
+    // }
+
     async getLuckResult() {
         const { ctx } = this;
 
-        const random = Math.random() * 100;
-        ctx.body = {
-            status: 200,
-            data: random,
-        };
+        try {
+            const prizeList = await ctx.service.prize.getPrizeList()
+            const sum = result.getWeightSum(prizeList)
+            const res = result.getLuckResult(prizeList, sum)
+
+            ctx.body = {
+                status: 200,
+                msg: 'success',
+                data: res
+            }
+        } catch (e) {
+            console.log(e);
+
+            ctx.body = {
+                status: 500,
+                msg: 'server error',
+                data: null
+            }
+        }
     }
 
 }
